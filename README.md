@@ -1,1 +1,1 @@
-# e-commerce API using Node/Express/Typescript
+# e-commerce API using Node/Express/TypeScript
