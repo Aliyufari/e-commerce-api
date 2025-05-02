@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ApiResponse } from "../helpers/ApiResponse";
 import { HttpStatus } from "../enums/HttpStatus";
 import { HttpStatusCode } from "../enums/HttpStatusCode";
+import { User } from "../interfaces/UserInterface";
 
 let users = [
     {id: 1, name: 'John Doe', email: 'jdoe@email.com', password: '', gender: 'Male'},
@@ -9,16 +10,75 @@ let users = [
     {id: 3, name: 'Jane Doe', email: 'jane@email.com', password: '', gender: 'Female'}
 ];
 
-export const index = (req: Request, res: Response) => {
-    res.status(HttpStatusCode.OK)
-        .send(
-            new ApiResponse(
+export const index = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const sortField = req.query.sort as string || 'createdAt';
+        const sortOrder = req.query.order === 'asc' ? 1 : -1;
+        
+        const sort: Record<string, number> = {};
+        sort[sortField] = sortOrder;
+        
+        const filter: Record<string, any> = {};
+        if (req.query.name) {
+            filter.name = { $regex: req.query.name, $options: 'i' };
+        }
+        
+        if (req.query.gender) {
+            filter.gender = req.query.gender;
+        }
+        
+        const options = {
+            page,
+            limit,
+            sort,
+            select: '-password', 
+            lean: true 
+        };
+
+        const result: PaginationResult<IUser> = await User.paginate(filter, options);
+    
+        res.status(HttpStatusCode.OK).json(
+        new ApiResponse(
                 HttpStatusCode.OK,
                 HttpStatus.OK,
-                'Users fetched successfully.',
-                users
+                'Users fetched successfully',
+                'users',
+                {
+                    users: result.docs,
+                    pagination: {
+                        total: result.totalDocs,
+                        page: result.page,
+                        pages: result.totalPages,
+                        limit: result.limit,
+                        hasNextPage: result.hasNextPage,
+                        hasPrevPage: result.hasPrevPage,
+                        nextPage: result.nextPage,
+                        prevPage: result.prevPage
+                    }
+                }
             )
         );
+    } catch (error) {
+        res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(
+            new ApiResponse(
+              HttpStatusCode.INTERNAL_SERVER_ERROR,
+              HttpStatus.INTERNAL_SERVER_ERROR,
+              'Failed to fetch users',
+            )
+        );
+    }
+    // const response = new ApiResponse<User[]>(
+    //     HttpStatusCode.OK,
+    //     HttpStatus.OK,
+    //     'Users fetched successfully.',
+    //     'users',
+    //     users
+    // );
+
+    // return res.status(HttpStatusCode.OK)
+    //     .json(response);
 }
 
 export const store = (req: Request, res: Response) => {
