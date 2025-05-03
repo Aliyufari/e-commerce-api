@@ -7,6 +7,8 @@ import { ApiResponse } from "./helpers/ApiResponse";
 import { HttpStatus } from "./enums/HttpStatus";
 import userRoutes from "./routes/userRoutes";
 import { connectDB } from "./config/db";
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from "./config/swagger";
 
 dotenv.config();
 
@@ -50,6 +52,9 @@ export class App{
         });
 
         this.app.use('/api/users', userRoutes);
+
+        // Swagger Route
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
         this.app.all(/(.*)/, (req: Request, res: Response) => {
             res.status(HttpStatusCode.NOT_FOUND)
