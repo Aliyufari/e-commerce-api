@@ -3,6 +3,7 @@ import { ValidationChain } from "express-validator";
 import { index, store, show, update, destroy } from "../controllers/userController";
 import { validate } from "../middlewares/validationMiddleware";
 import { userValidation } from "../validations/userValidation";
+import { hasRole } from "../middlewares/authMiddleware";
 
 const userRouter = Router();
 
@@ -29,7 +30,7 @@ const userRouter = Router();
  *         description: User created
  */
 userRouter.route('/')
-    .get(validate(userValidation.pagination as ValidationChain[]), index)
+    .get(hasRole('user'), validate(userValidation.pagination as ValidationChain[]), index)
     .post(validate(userValidation.createUser as ValidationChain[]), store);
 
 /**

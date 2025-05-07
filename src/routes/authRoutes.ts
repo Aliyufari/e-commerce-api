@@ -23,7 +23,8 @@ const authRouter = Router()
  *       201:
  *         description: User registered
  */
-authRouter.route('/register').post(validate(authValidation.registerUser as ValidationChain[]), register);
+authRouter.route('/register')
+    .post(validate(authValidation.registerUser as ValidationChain[]), register);
 
 /**
  * @swagger
@@ -41,6 +42,7 @@ authRouter.route('/register').post(validate(authValidation.registerUser as Valid
  *       201:
  *         description: User logged in
  */
-authRouter.route('/login').post(validate(authValidation.loginUser as ValidationChain[]), login);
+authRouter.route('/login')
+    .post(validate(authValidation.loginUser as ValidationChain[]), login);
 
-export default userRouter
+export default authRouter

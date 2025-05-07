@@ -1,46 +1,51 @@
-import { RequestHandler } from "express";
-import { body } from "express-validator";
+import { body, param } from 'express-validator';
+import mongoose from 'mongoose';
 
-type ValidationSchema = {
-    [key: string]: RequestHandler[];
+const isValidObjectId = (value: string) => {
+  return mongoose.Types.ObjectId.isValid(value);
 };
 
-export const authValidation: ValidationSchema = {
+export const authValidation = {
     registerUser: [
         body('name')
-            .trim()
-            .notEmpty().withMessage('Name is required')
-            .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
-            
+        .trim()
+        .notEmpty().withMessage('Name is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
+        
         body('email')
-            .trim()
-            .notEmpty().withMessage('Email is required')
-            .isEmail().withMessage('Must be a valid email address')
-            .normalizeEmail(),
-            
+        .trim()
+        .notEmpty().withMessage('Email is required')
+        .isEmail().withMessage('Please enter a valid email'),
+        
         body('password')
-            .trim()
-            .notEmpty().withMessage('Password is required')
-            .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
-            .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/).withMessage(
-                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
-            ),
-            
+        .trim()
+        .notEmpty().withMessage('Password is required')
+        .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+        
         body('gender')
-            .trim()
-            .notEmpty().withMessage('Gender is required')
-            .isIn(['Male', 'Female']).withMessage('Gender must be Male, or Female')
+        .trim()
+        .notEmpty().withMessage('Gender is required')
+        .isIn(['Male', 'Female']).withMessage('Invalid gender option'),
+        
+        body('phone')
+        .optional()
+        .trim()
+        .matches(/^\+?[0-9\s-]+$/).withMessage('Invalid phone number format')
     ],
 
     loginUser: [
         body('email')
-            .trim()
-            .notEmpty().withMessage('Email is required')
-            .isEmail().withMessage('Must be a valid email address')
-            .normalizeEmail(),
-            
+        .trim()
+        .notEmpty().withMessage('Email is required')
+        .isEmail().withMessage('Please enter a valid email'),
+        
         body('password')
-            .trim()
-            .notEmpty().withMessage('Password is required')
+        .trim()
+        .notEmpty().withMessage('Password is required')
+    ],
+
+    validateUserId: [
+        param('id')
+        .custom(isValidObjectId).withMessage('Must be a valid MongoDB ID')
     ]
-}
+};

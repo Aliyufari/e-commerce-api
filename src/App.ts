@@ -5,8 +5,8 @@ import dotenv from "dotenv"
 import { HttpStatusCode } from "./enums/HttpStatusCode";
 import { ApiResponse } from "./helpers/ApiResponse";
 import { HttpStatus } from "./enums/HttpStatus";
-import userRoutes from "./routes/userRoutes";
-import authRoutes from "./routes/authRoutes";
+import userRouter from "./routes/userRoutes";
+import authRouter from "./routes/authRoutes";
 import { connectDB } from "./config/db";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from "./config/swagger";
@@ -53,10 +53,10 @@ export class App{
         });
 
         // Auth routes
-        this.app.use('/api/auth', authRoutes);
+        this.app.use('/api/auth', authRouter);
 
         // Users routes
-        this.app.use('/api/users', userRoutes);
+        this.app.use('/api/users', userRouter);
 
         // Swagger route
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

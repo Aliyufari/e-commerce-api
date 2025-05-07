@@ -29,14 +29,31 @@ export const register =  asyncHandler(async (req: Request, res: Response): Promi
         return;
     }
 
+    const phoneExists = await User.findOne({ phone: phone });
+    if (phoneExists) {
+        res.status(HttpStatusCode.BAD_REQUEST)
+            .json(
+                new ApiResponse(
+                    HttpStatusCode.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST,
+                    'Phone already in use'
+                )
+            );
+        
+        return;
+    }
+
     const role = await Role.findOne({ name: 'user' });
     if (!role) {
         console.error('Role not found');
-        res.status(400).json({
-            statusCode: 400,
-            status: 'BAD REQUEST',
-            message: 'Default role not found in the database'
-        });
+        res.status(HttpStatusCode.BAD_REQUEST)
+            .json(
+                new ApiResponse(
+                    HttpStatusCode.BAD_REQUEST,
+                    HttpStatus.BAD_REQUEST,
+                    'Role not found'
+                )  
+            );
         return;
     }
     const user = await User.create({
@@ -45,7 +62,7 @@ export const register =  asyncHandler(async (req: Request, res: Response): Promi
         email,
         phone,
         gender,
-        role: role?._id,
+        role: role._id,
         password
     })
 
