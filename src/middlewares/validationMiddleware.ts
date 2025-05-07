@@ -21,6 +21,7 @@ export const validate = (validations: ValidationChain[]) => {
                 return acc;
             }, {})
 
+        console.error(formattedErrors);
         res.status(HttpStatusCode.BAD_REQUEST).json(
             new ApiResponse(
                 HttpStatusCode.BAD_REQUEST,

@@ -1,7 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import { UserInterface, UserModel } from '../interfaces/UserInterface';
+import { UserInterface, UserModel } from '../types';
 
 const userSchema: Schema = new Schema(
     {
@@ -20,6 +20,14 @@ const userSchema: Schema = new Schema(
         lowercase: true,
         match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
       },
+      phone: {
+        type: String,
+        required: [true, 'Phone is required'],
+        unique: true,
+        trim: true,
+        minlength: [11, 'Phone must be 11 characters'],
+        maxlength: [11, 'Phone cannot exceed 11 characters']
+      },
       password: {
         type: String,
         required: [true, 'Password is required'],
@@ -29,20 +37,20 @@ const userSchema: Schema = new Schema(
         type: String,
         required: [true, 'Gender is required'],
         enum: {
-          values: ['Male', 'Female', 'Non-binary', 'Other', 'Prefer not to say'],
+          values: ['Male', 'Female'],
           message: '{VALUE} is not a valid gender option'
         }
       },
       role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
-      },
+        type: Schema.Types.ObjectId,
+        ref: 'Role',
+        required: true
+      },      
       isActive: {
         type: Boolean,
         default: true
       },
-      profilePicture: {
+      avatar: {
         type: String,
         default: ''
       },
@@ -55,6 +63,7 @@ const userSchema: Schema = new Schema(
     }
 );
 
+// Hashed password
 userSchema.pre<UserInterface>('save', async function(next) {
     if (!this.isModified('password')) return next();
 
@@ -67,10 +76,12 @@ userSchema.pre<UserInterface>('save', async function(next) {
     }
 });
 
+// Compare password before using it
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
+// Hide password in response
 userSchema.methods.toJSON = function() {
     const userObject = this.toObject();
     delete userObject.password;
@@ -83,4 +94,4 @@ userSchema.statics.findByEmail = function(email: string) {
 
 userSchema.plugin(mongoosePaginate);
 
-export const User = mongoose.model<UserInterface, UserModel<UserInterface>>('User', userSchema);
+export const User = model<UserInterface, UserModel<UserInterface>>('User', userSchema);

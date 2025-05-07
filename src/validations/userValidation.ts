@@ -29,7 +29,10 @@ export const userValidation: ValidationSchema  = {
         body('gender')
             .trim()
             .notEmpty().withMessage('Gender is required')
-            .isIn(['Male', 'Female']).withMessage('Gender must be Male, or Female')
+            .isIn(['Male', 'Female']).withMessage('Gender must be Male, or Female'),
+
+        body('role')
+            .isMongoId().withMessage('Role must be a valid MongoDB ID')
     ],
     
     updateUser: [

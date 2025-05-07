@@ -9,13 +9,13 @@ const options: swaggerJSDoc.options = {
             version: '1.0.0',
             description: 'An e-commerce application API using Express with TypeScript'
         },
-        server: [
+        servers: [
             {
-                uri: `http://localhost:${process.env.PORT}`
+                url: `http://localhost:${process.env.PORT}`
             }
         ]
     },
-    apis: ['./src/routes*.ts']
+    apis: ['**/routes/*.ts'],
 }
 
 export const swaggerSpec = swaggerJSDoc(options);
