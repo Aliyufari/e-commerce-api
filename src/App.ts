@@ -26,11 +26,6 @@ export class App{
         });
     }
 
-    //For Vercel Deployment
-    public getApp(): Application {
-        return this.app;
-    }    
-
     private middilewares(): void {
         this.app.use(cors({ origin: '*' }));
         this.app.use(express.json());
