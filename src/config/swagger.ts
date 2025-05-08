@@ -15,6 +15,21 @@ const options: swaggerJSDoc.options = {
             }
         ]
     },
+    components: {
+        schemas: {
+          User: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              email: { type: 'string', format: 'email' },
+              gender: { type: 'string', format: 'gender' },
+              phone: { type: 'string', format: 'phone' },
+              password: { type: 'string', format: 'password' },
+            },
+            required: ['name', 'email', 'password'],
+          },
+        },
+    },
     apis: ['**/routes/*.ts'],
 }
 
