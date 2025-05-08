@@ -1,8 +1,17 @@
 import { App } from "./App";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const init = () => {
-    const app = new App();
-    app.listen();
+    const appInstance = new App();
+    if (process.env.NODE_ENV !== 'production') {
+        appInstance.listen();
+    }
+    
+    return appInstance.getApp();
 }
 
-init();
+const app = init();
+
+export default app;

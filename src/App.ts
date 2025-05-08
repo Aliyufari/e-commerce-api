@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import ip from "ip";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import { HttpStatusCode } from "./enums/HttpStatusCode";
 import { ApiResponse } from "./helpers/ApiResponse";
 import { HttpStatus } from "./enums/HttpStatus";
@@ -15,24 +15,29 @@ dotenv.config();
 
 export class App{
     private readonly app: Application;
-    constructor(private readonly port: (number | string) = process.env.PORT || 8000){
+    constructor(private readonly port: (number | string) = process.env.NODE_PORT || 8000){
         this.app = express();
         this.middilewares();
         this.routes();
-    }
 
-    public listen(): void {
+        // Connect to DB
         connectDB()
-            .then(() => {
-                this.app.listen(this.port, () => {
-                    console.info(`Server running on: ${ip.address()}:${this.port}`)
-                });
-            })
             .catch((error) => {
                 console.error(`Error connecting database: ${error}`);
                 process.exit(1);
             });
     }
+
+    public listen(): void {
+        this.app.listen(this.port, () => {
+            console.info(`Server running on: ${ip.address()}:${this.port}`)
+        });
+    }
+
+    //For Vercel Deployment
+    public getApp(): Application {
+        return this.app;
+    }    
 
     private middilewares(): void {
         this.app.use(cors({ origin: '*' }));
