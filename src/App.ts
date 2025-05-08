@@ -7,7 +7,6 @@ import { ApiResponse } from "./helpers/ApiResponse";
 import { HttpStatus } from "./enums/HttpStatus";
 import userRouter from "./routes/userRoutes";
 import authRouter from "./routes/authRoutes";
-import { connectDB } from "./config/db";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from "./config/swagger";
 
@@ -19,13 +18,6 @@ export class App{
         this.app = express();
         this.middilewares();
         this.routes();
-
-        // Connect to DB
-        connectDB()
-            .catch((error) => {
-                console.error(`Error connecting database: ${error}`);
-                process.exit(1);
-            });
     }
 
     public listen(): void {
