@@ -2,10 +2,11 @@
   "name": "e-commerce-api",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "build": "npx tsc -p .",
     "start": "nodemon --exec npx ts-node src/index.ts",
-    "server": "npx tsc -p . && node dist/",
+    "server": "node dist/",
     "seed": "npx ts-node src/seeders/index.ts"
   },
   "keywords": [],

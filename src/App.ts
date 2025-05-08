@@ -19,6 +19,13 @@ export class App{
         this.app = express();
         this.middilewares();
         this.routes();
+
+        // Connect to DB
+        connectDB()
+            .catch((error) => {
+                console.error(`Error connecting database: ${error}`);
+                process.exit(1);
+            });
     }
 
     public listen(): void {
@@ -36,24 +43,6 @@ export class App{
         this.app.use(cors({ origin: '*' }));
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-
-        // Connect DB
-        this.app.use(async (req: Request, res: Response, next): Promise<void> => {
-            try {
-                await connectDB();
-                next();
-            } catch (error) {
-                console.error("Database connection error:", error);
-                res.status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-                    .json(
-                        new ApiResponse(
-                            HttpStatusCode.INTERNAL_SERVER_ERROR,
-                            HttpStatus.INTERNAL_SERVER_ERROR,
-                            'Database connection error'
-                        )
-                    );
-            }
-        });
     }
 
     private routes(): void {
