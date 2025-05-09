@@ -11,12 +11,12 @@ const options: swaggerJSDoc.Options = {
         },
         servers: [
             {
-                url: `http://localhost:${process.env.PORT}`,
-                description: 'Local Server'
-            },
-            {
                 url: 'https://e-commerce-api-g4z3.onrender.com',
                 description: 'Production Server'
+            },
+            {
+                url: `http://localhost:${process.env.PORT}`,
+                description: 'Local Server'
             }
         ],
         components: {
