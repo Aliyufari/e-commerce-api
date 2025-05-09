@@ -14,6 +14,7 @@ dotenv.config();
 
 export class App{
     private readonly app: Application;
+    
     constructor(private readonly port: (number | string) = process.env.NODE_PORT || 8000){
         this.app = express();
         this.middilewares();

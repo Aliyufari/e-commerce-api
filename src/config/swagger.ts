@@ -26,14 +26,33 @@ const options: swaggerJSDoc.Options = {
                 User: {
                     type: 'object',
                     properties: {
-                    name: { type: 'string' },
-                    email: { type: 'string', format: 'email' },
-                    gender: { type: 'string' },
-                    phone: { type: 'string' },
-                    password: { type: 'string', format: 'password' },
+                        name: { type: 'string' },
+                        email: { type: 'string', format: 'email' },
+                        gender: { type: 'string' },
+                        phone: { type: 'string' },
+                        password: { type: 'string', format: 'password' },
                     },
                     required: ['name', 'email', 'password'],
                 },
+                UserRegister: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string' },
+                        email: { type: 'string', format: 'email' },
+                        gender: { type: 'string' },
+                        phone: { type: 'string' },
+                        password: { type: 'string', format: 'password' },
+                    },
+                    required: ['name', 'email', 'password'],
+                },
+                UserLogin: {
+                    type: 'object',
+                    properties: {
+                        email: { type: 'string', format: 'email' },
+                        password: { type: 'string', format: 'password' },
+                    },
+                    required: ['email', 'password'],
+                }
             },
         },
     },

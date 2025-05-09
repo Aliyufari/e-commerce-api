@@ -13,19 +13,23 @@ const userRouter = Router();
  *   get:
  *     summary: Get all users
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of users
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
- *     requestBody:
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:                              
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/User'
- *     responses:
+ *     responses:                               
  *       201:
  *         description: User created
  */
@@ -39,7 +43,9 @@ userRouter.route('/')
  *   get:
  *     summary: Get a single user
  *     tags: [Users]
- *     parameters:
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:                               
  *       - in: path
  *         name: id
  *         required: true
@@ -48,9 +54,14 @@ userRouter.route('/')
  *     responses:
  *       200:
  *         description: A user object
+ *       404:
+ *         description: User not found            
+ * 
  *   put:
  *     summary: Update a user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -66,9 +77,14 @@ userRouter.route('/')
  *     responses:
  *       200:
  *         description: User updated
+ *       400:
+ *         description: Invalid input              
+ * 
  *   delete:
  *     summary: Delete a user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -78,6 +94,8 @@ userRouter.route('/')
  *     responses:
  *       204:
  *         description: User deleted
+ *       404:
+ *         description: User not found            
  */
 userRouter.route('/:id')
     .get(validate(userValidation.userId as ValidationChain[]), show)

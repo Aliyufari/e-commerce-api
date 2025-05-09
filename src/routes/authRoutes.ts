@@ -18,7 +18,7 @@ const authRouter = Router()
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/UserRegister'
  *     responses:
  *       201:
  *         description: User registered
@@ -37,7 +37,7 @@ authRouter.route('/register')
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/UserLogin'
  *     responses:
  *       201:
  *         description: User logged in

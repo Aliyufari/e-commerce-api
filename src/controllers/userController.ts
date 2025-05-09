@@ -29,15 +29,17 @@ export const index = async (req: Request, res: Response): Promise<void> => {
             filter.gender = req.query.gender;
         }
 
-        const options = {
+        const result: PaginationResult<UserInterface> = await User.paginate(filter, {
             page,
             limit,
             sort,
             select: '-password',
-            lean: true
-        };
-
-        const result: PaginationResult<UserInterface> = await User.paginate(filter, options);
+            lean: false,
+            populate: {
+                path: 'role',       
+                select: 'name'
+            }
+        });
 
         res.status(HttpStatusCode.OK)
             .json(

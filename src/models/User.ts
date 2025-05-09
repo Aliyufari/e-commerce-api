@@ -70,24 +70,38 @@ userSchema.pre<UserInterface>('save', async function(next) {
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
-        next()
+        next();
     } catch (error: any) {
-        next(error)
+        console.error('Error hashing password: ', error);
+        next(error);
     }
 });
+
+// Hide password and others in response
+userSchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: (_, ret) => {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+    
+        // Return just name from role
+        if (ret.role && ret.role._id) {
+            ret.role = ret.role.name; 
+        }
+
+        return ret;
+    }
+});  
 
 // Compare password before using it
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Hide password in response
-userSchema.methods.toJSON = function() {
-    const userObject = this.toObject();
-    delete userObject.password;
-    return userObject;
-};
-
+// Design Response
 userSchema.statics.findByEmail = function(email: string) {
     return this.findOne({ email });
 };
