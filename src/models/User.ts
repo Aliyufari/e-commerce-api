@@ -83,8 +83,14 @@ userSchema.set('toJSON', {
     versionKey: false,
     transform: (_, ret) => {
         ret.id = ret._id;
+        ret.created_at = ret.createdAt;
+        ret.updated_at = ret.updatedAt;
+        ret.last_login = ret.lastLogin;
         delete ret._id;
         delete ret.__v;
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        delete ret.lastLogin;
         delete ret.password;
     
         // Return just name from role

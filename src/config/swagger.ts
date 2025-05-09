@@ -1,5 +1,8 @@
+import dotenv from 'dotenv';
 // @ts-ignore
 import swaggerJSDoc from 'swagger-jsdoc';
+
+dotenv.config();
 
 const options: swaggerJSDoc.Options = {
     definition: {
@@ -15,7 +18,7 @@ const options: swaggerJSDoc.Options = {
                 description: 'Production Server'
             },
             {
-                url: `http://localhost:${process.env.PORT}`,
+                url: `http://localhost:${process.env.NODE_PORT}`,
                 description: 'Local Server'
             }
         ],

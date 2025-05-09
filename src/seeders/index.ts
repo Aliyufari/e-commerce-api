@@ -14,12 +14,12 @@ const seedData = async () => {
 
     await seedPermissions();
     await seedRoles();
-    // await seedUsers();
+    await seedUsers();
 
-    console.log('Seeding complete ✅');
+    console.log('Seeding complete');
     process.exit(0);
   } catch (err) {
-    console.error('Seeding failed ❌', err);
+    console.error('Seeding failed', err);
     process.exit(1);
   }
 };

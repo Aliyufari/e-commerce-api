@@ -5,10 +5,11 @@ import dotenv from "dotenv";
 import { HttpStatusCode } from "./enums/HttpStatusCode";
 import { ApiResponse } from "./helpers/ApiResponse";
 import { HttpStatus } from "./enums/HttpStatus";
-import userRouter from "./routes/userRoutes";
-import authRouter from "./routes/authRoutes";
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from "./config/swagger";
+import authRouter from "./routes/authRoutes";
+import roleRouter from "./routes/roleRoutes";
+import userRouter from "./routes/userRoutes";
 
 dotenv.config();
 
@@ -47,6 +48,9 @@ export class App{
 
         // Auth routes
         this.app.use('/api/auth', authRouter);
+
+        // Users routes
+        this.app.use('/api/roles', roleRouter);
 
         // Users routes
         this.app.use('/api/users', userRouter);

@@ -79,7 +79,8 @@ export const register =  asyncHandler(async (req: Request, res: Response): Promi
                         avatar: user.avatar ? `/uploads/${user.avatar}` : null,
                         name: user.name,
                         email: user.email,
-                        token: generateToken(user.id)
+                        token: generateToken(user.id),
+                        last_login: user.lastLogin
                     }
                 )
             );
@@ -105,6 +106,10 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
     
     const user = await User.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
+        // Update last login date
+        user.lastLogin = new Date(); 
+        await user.save();
+
         res.status(HttpStatusCode.CREATED)
             .json(
                 new ApiResponse(
@@ -117,7 +122,8 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
                         avatar: user.avatar ? `/uploads/${user.avatar}` : null,
                         name: user.name,
                         email: user.email,
-                        token: generateToken(user.id)
+                        token: generateToken(user.id),
+                        last_login: user.lastLogin
                     }
                 )
             );
@@ -135,9 +141,13 @@ export const login = asyncHandler(async (req: Request, res: Response): Promise<v
         );
 }); 
 
+export const me = asyncHandler( async (req: Request, res: Response): Promise<void> => {
+
+});
+
 const generateToken = (id: string) => {
     if (!process.env.JWT_SECRET) {
-        throw new Error('JWT_SECRET not set');
+        throw new Error('JWT secret not set');
     }
 
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });

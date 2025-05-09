@@ -4,6 +4,7 @@ import userRouter from "./userRoutes";
 import { validate } from "../middlewares/validationMiddleware";
 import { authValidation } from "../validations/authValidation";
 import { ValidationChain } from "express-validator";
+import { uploadSingle } from "../middlewares/uploadMiddleware";
 
 const authRouter = Router()
 
@@ -24,7 +25,11 @@ const authRouter = Router()
  *         description: User registered
  */
 authRouter.route('/register')
-    .post(validate(authValidation.registerUser as ValidationChain[]), register);
+    .post(
+        validate(authValidation.registerUser as ValidationChain[]), 
+        uploadSingle('avatar'),
+        register
+    );
 
 /**
  * @swagger
@@ -45,4 +50,4 @@ authRouter.route('/register')
 authRouter.route('/login')
     .post(validate(authValidation.loginUser as ValidationChain[]), login);
 
-export default authRouter
+export default authRouter;

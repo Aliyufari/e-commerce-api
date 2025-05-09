@@ -3,14 +3,13 @@ import mongoose, { Document, PaginateModel } from 'mongoose';
 
 // User
 export interface UserInterface extends Document {
+  avatar?: string;
   name: string;
   email: string;
   phone: number;
   password: string;
   gender?: 'Male' | 'Female';
   role: mongoose.Types.ObjectId | RoleInterface;
-  isActive: boolean;
-  avatar?: string;
   lastLogin?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -26,6 +25,8 @@ export interface UserModel<T extends Document> extends PaginateModel<T> {
 export interface RoleInterface extends Document {
   name: string; 
   permissions: mongoose.Types.ObjectId[] | PermissionInterface[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface PermissionInterface extends Document {
